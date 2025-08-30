@@ -24,6 +24,33 @@
             return prizes[randomIndex];
         }
 
+        function playAudio() {
+            try {
+                // Garantir que o áudio está pronto
+                if (!audioInitialized) {
+                    initializeAudio();
+                }
+                
+                spinSound.currentTime = 0;
+                spinSound.volume = 0.5;
+                
+                const playPromise = spinSound.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Áudio tocando normalmente');
+                    }).catch(error => {
+                        console.log('Erro ao tocar áudio:', error);
+                        // Tentar novamente após um pequeno delay
+                        setTimeout(() => {
+                            spinSound.play().catch(e => console.log('Segunda tentativa falhou:', e));
+                        }, 100);
+                    });
+                }
+            } catch (error) {
+                console.log('Erro geral no áudio:', error);
+            }
+        }
+
         function spinWheel() {
             if (isSpinning) return;
             
@@ -32,16 +59,7 @@
             spinButton.textContent = 'GIRANDO...';
             
             // Tocar música
-            try {
-                spinSound.currentTime = 0;
-                spinSound.volume = 0.5;
-                const playPromise = spinSound.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(e => console.log('Erro ao tocar áudio:', e));
-                }
-            } catch (e) {
-                console.log('Erro ao tocar áudio:', e);
-            }
+            playAudio();
             
             // Selecionar prêmio aleatório
             const selectedPrize = getRandomPrize();
@@ -87,7 +105,13 @@
         }
 
         // Event listeners
-        spinButton.addEventListener('click', spinWheel);
+        spinButton.addEventListener('click', () => {
+            // Garantir que o áudio está inicializado no primeiro clique
+            if (!audioInitialized) {
+                initializeAudio();
+            }
+            spinWheel();
+        });
 
         // Fechar modal clicando fora dele
         window.addEventListener('click', (event) => {
@@ -96,7 +120,25 @@
             }
         });
 
-        // Permitir que o usuário interaja com o áudio
-        document.addEventListener('click', () => {
-            spinSound.load();
-        }, { once: true });
+        // Inicializar áudio após primeira interação
+        let audioInitialized = false;
+        
+        function initializeAudio() {
+            if (!audioInitialized) {
+                spinSound.load();
+                // Tentar reproduzir silenciosamente para "acordar" o áudio
+                spinSound.volume = 0;
+                spinSound.play().then(() => {
+                    spinSound.pause();
+                    spinSound.currentTime = 0;
+                    spinSound.volume = 0.5;
+                    audioInitialized = true;
+                }).catch(() => {
+                    console.log('Aguardando interação do usuário para ativar áudio');
+                });
+            }
+        }
+        
+        // Inicializar áudio na primeira interação
+        document.addEventListener('click', initializeAudio, { once: true });
+        document.addEventListener('touchstart', initializeAudio, { once: true });
