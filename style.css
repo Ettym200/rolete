@@ -1,0 +1,311 @@
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('BG.jpg') center center / cover no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .casino-container {
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .title {
+            color: #00ff88;
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px #00ff88;
+            margin-bottom: 2rem;
+            animation: neonGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from { text-shadow: 0 0 20px #00ff88, 0 0 30px #00ff88; }
+            to { text-shadow: 0 0 30px #00ff88, 0 0 40px #00ff88, 0 0 50px #00ff88; }
+        }
+
+        .roulette-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .roulette-wheel {
+            width: 400px;
+            height: 400px;
+            max-width: 90vw;
+            max-height: 90vw;
+            border-radius: 50%;
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            cursor: pointer;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5));
+        }
+
+        .roulette-wheel.spinning {
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .pointer {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ff0040;
+            filter: drop-shadow(0 0 10px #ff0040);
+            z-index: 10;
+        }
+
+        .spin-button {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #456b58);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .spin-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a0000, #330000);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 3px solid #00ff88;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #00ff88;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px #00ff88;
+        }
+
+        .modal p {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .close-button {
+            background: #ff0040;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: #cc0033;
+            transform: scale(1.05);
+        }
+
+        .lights {
+            position: absolute;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .light {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Position lights around the wheel */
+        .light:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .light:nth-child(2) { top: 15%; right: 15%; }
+        .light:nth-child(3) { top: 50%; right: 0; transform: translateY(-50%); }
+        .light:nth-child(4) { bottom: 15%; right: 15%; }
+        .light:nth-child(5) { bottom: 0; left: 50%; transform: translateX(-50%); }
+        .light:nth-child(6) { bottom: 15%; left: 15%; }
+        .light:nth-child(7) { top: 50%; left: 0; transform: translateY(-50%); }
+        .light:nth-child(8) { top: 15%; left: 15%; }
+
+        /* Responsividade para dispositivos móveis */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+                overflow-y: auto;
+            }
+
+            .casino-container {
+                gap: 1.5rem;
+                min-height: 100vh;
+                justify-content: center;
+            }
+
+            .title {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .roulette-wheel {
+                width: 280px;
+                height: 280px;
+                max-width: 85vw;
+                max-height: 85vw;
+            }
+
+            .spin-button {
+                padding: 12px 30px;
+                font-size: 1.2rem;
+                letter-spacing: 1px;
+            }
+
+            .modal-content {
+                width: 90%;
+                margin: 50% auto;
+                transform: translateY(-50%);
+                padding: 1.5rem;
+            }
+
+            .modal h2 {
+                font-size: 2rem;
+            }
+
+            .modal p {
+                font-size: 1rem;
+            }
+
+            .light {
+                width: 8px;
+                height: 8px;
+            }
+            .pointer {
+                position: absolute;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                border-top: 30px solid #ff0040;
+                filter: drop-shadow(0 0 10px #ff0040);
+                z-index: 10;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .casino-container {
+                gap: 1rem;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .roulette-wheel {
+                width: 240px;
+                height: 240px;
+                max-width: 80vw;
+                max-height: 80vw;
+            }
+
+            .spin-button {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 50% auto;
+                transform: translateY(-50%);
+                padding: 1rem;
+            }
+
+            .modal h2 {
+                font-size: 1.5rem;
+            }
+
+            .light {
+                width: 6px;
+                height: 6px;
+            }
+
+            .pointer {
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;
+                border-top: 24px solid #ff0040;
+                top: 15px;
+            }
+            
+        }
+    

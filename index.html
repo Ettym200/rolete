@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta do Casino</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="casino-container">
+        
+        
+        <div class="roulette-container">
+            <div class="pointer"></div>
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/roleta-ib10G9Q5wWvBwdfsRZ4o1tu7Gj48I0.png" alt="Roleta" class="roulette-wheel" id="rouletteWheel">
+            <div class="lights">
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+            </div>
+        </div>
+        
+        <button class="spin-button" id="spinButton">GIRAR ROLETA</button>
+        
+        <audio id="spinSound" preload="auto">
+            <source src="roleta.MP3" type="audio/mpeg">
+        </audio>
+    </div>
+
+     
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2 id="resultTitle">🎉 PARABÉNS! 🎉</h2>
+            <p id="resultText">Você ganhou um prêmio incrível!</p>
+            <button class="close-button" onclick="closeModal()">FECHAR</button>
+        </div>
+    </div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>
