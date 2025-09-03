@@ -102,6 +102,22 @@
 
         function closeModal() {
             modal.style.display = 'none';
+            // Resetar a roleta para o ponto zero após fechar o modal
+            resetRoulette();
+        }
+
+        function resetRoulette() {
+            // Desabilitar transição temporariamente para reset instantâneo
+            rouletteWheel.style.transition = 'none';
+            
+            // Resetar a rotação para 0 graus instantaneamente
+            rouletteWheel.style.transform = 'rotate(0deg)';
+            currentRotation = 0;
+            
+            // Reabilitar transição após um pequeno delay
+            setTimeout(() => {
+                rouletteWheel.style.transition = '';
+            }, 50);
         }
 
         // Event listeners
